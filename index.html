@@ -1,0 +1,937 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WIMS | Warehouse Management System</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: #f8f1ed;
+    color: #493b3b;
+}
+
+.container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+    width: 245px;
+    background: #49383f;
+    color: white;
+    padding: 28px 18px;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    overflow-y: auto;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 10px 35px;
+}
+
+.logo-icon {
+    background: linear-gradient(135deg, #d98da3, #b87591);
+    padding: 12px;
+    border-radius: 12px;
+    font-size: 22px;
+}
+
+.logo h2 {
+    font-size: 22px;
+    letter-spacing: 1px;
+}
+
+.logo p {
+    color: #e2c8d0;
+    font-size: 10px;
+    letter-spacing: 1px;
+    margin-top: 3px;
+}
+
+.menu-heading {
+    color: #c09da9;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    padding: 15px 12px 10px;
+}
+
+.sidebar a {
+    display: block;
+    text-decoration: none;
+    color: #e8d5d6;
+    padding: 13px 14px;
+    border-radius: 9px;
+    margin: 5px 0;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+.sidebar a:hover,
+.sidebar a.active {
+    background: #70525f;
+    color: white;
+}
+
+.sidebar a.active {
+    border-left: 3px solid #f0b7c7;
+}
+
+.sidebar-footer {
+    margin-top: 55px;
+    padding: 16px;
+    background: #604955;
+    border-radius: 12px;
+    color: #f0dfe1;
+    font-size: 12px;
+    line-height: 1.8;
+}
+
+/* MAIN CONTENT */
+
+.main {
+    margin-left: 245px;
+    width: calc(100% - 245px);
+    padding: 28px 35px;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+    gap: 15px;
+}
+
+.search {
+    background: #fffaf7;
+    border: 1px solid #eededc;
+    border-radius: 10px;
+    padding: 12px 16px;
+    width: 310px;
+    color: #806a70;
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+}
+
+.avatar {
+    background: #f3dfe5;
+    color: #a76680;
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    font-weight: bold;
+}
+
+.welcome {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    gap: 15px;
+}
+
+.welcome h1 {
+    font-size: 27px;
+    color: #654754;
+    margin-bottom: 7px;
+}
+
+.welcome p {
+    color: #9a7d83;
+    font-size: 14px;
+}
+
+.date {
+    background: #fffaf7;
+    border: 1px solid #eededc;
+    border-radius: 9px;
+    padding: 12px 16px;
+    color: #806a70;
+    font-size: 13px;
+}
+
+/* STAT CARDS */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 28px;
+}
+
+.stat-card {
+    background: #fffaf7;
+    padding: 22px;
+    border-radius: 15px;
+    box-shadow: 0 4px 18px rgba(130, 85, 100, 0.07);
+    border: 1px solid #eededc;
+}
+
+.stat-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.stat-icon {
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    font-size: 21px;
+}
+
+.blue { background: #f7e1e8; }
+.purple { background: #eee3ed; }
+.green { background: #e9eee3; }
+.orange { background: #f8e9dc; }
+
+.stat-card h2 {
+    font-size: 28px;
+    margin-top: 20px;
+    color: #654754;
+}
+
+.stat-card p {
+    font-size: 13px;
+    color: #9a858a;
+    margin-top: 5px;
+}
+
+.change {
+    font-size: 11px;
+    color: #66845d;
+    background: #e8efe5;
+    padding: 5px 8px;
+    border-radius: 20px;
+}
+
+/* PANELS */
+
+.panel {
+    background: #fffaf7;
+    border: 1px solid #eededc;
+    border-radius: 15px;
+    padding: 23px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 18px rgba(130, 85, 100, 0.06);
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 22px;
+    gap: 10px;
+}
+
+.panel-header h2 {
+    font-size: 17px;
+    color: #654754;
+}
+
+.panel-header p {
+    font-size: 12px;
+    color: #9a7d83;
+    margin-top: 5px;
+}
+
+/* BUTTONS */
+
+.btn {
+    background: #bd7e94;
+    color: white;
+    border: none;
+    padding: 11px 17px;
+    border-radius: 8px;
+    font-size: 12px;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background: #a96680;
+}
+
+.btn-light {
+    background: #f4e5e7;
+    color: #8f5e70;
+}
+
+/* TABLE */
+
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 650px;
+}
+
+th {
+    text-align: left;
+    background: #f3e6e3;
+    color: #805e67;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    padding: 15px 12px;
+}
+
+td {
+    padding: 16px 12px;
+    border-bottom: 1px solid #f0e3e0;
+    font-size: 13px;
+    color: #715c60;
+}
+
+td strong {
+    color: #5c414a;
+}
+
+.product-id {
+    color: #b66f89;
+    font-weight: bold;
+}
+
+.status {
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.in-stock {
+    background: #e8efe5;
+    color: #66845d;
+}
+
+.low-stock {
+    background: #f9e8dc;
+    color: #b77b51;
+}
+
+/* LOWER GRID */
+
+.lower-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+}
+
+.stock-item {
+    margin-bottom: 20px;
+}
+
+.stock-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 9px;
+    font-size: 13px;
+}
+
+.stock-info span:last-child {
+    color: #9a858a;
+}
+
+.progress {
+    background: #f0e5e2;
+    height: 8px;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    border-radius: 20px;
+    background: #c9849b;
+}
+
+.purple-fill { background: #aa8aa9; }
+.green-fill { background: #9eae8d; }
+.orange-fill { background: #d8a47d; }
+
+/* QUICK ACTIONS */
+
+.actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.action {
+    background: #fbf1ee;
+    border: 1px solid #eededc;
+    padding: 17px;
+    border-radius: 11px;
+    text-decoration: none;
+    color: #72515d;
+    font-size: 13px;
+}
+
+.action:hover {
+    background: #f4e1e5;
+}
+
+.action span {
+    display: block;
+    font-size: 22px;
+    margin-bottom: 9px;
+}
+
+/* FORMS */
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+.form-group label {
+    display: block;
+    color: #806a70;
+    font-size: 12px;
+    margin-bottom: 8px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ead9d7;
+    border-radius: 8px;
+    outline: none;
+    background: #fffaf7;
+    font-size: 13px;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #bd7e94;
+}
+
+.form-submit {
+    margin-top: 18px;
+}
+
+.report-list {
+    list-style: none;
+}
+
+.report-list li {
+    padding: 14px;
+    border-bottom: 1px solid #f0e3e0;
+    color: #765c64;
+    font-size: 13px;
+}
+
+.footer {
+    text-align: center;
+    padding: 25px;
+    color: #a58b8c;
+    font-size: 12px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1000px) {
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 700px) {
+    .sidebar {
+        width: 100%;
+        position: relative;
+        bottom: auto;
+    }
+
+    .container {
+        display: block;
+    }
+
+    .main {
+        margin-left: 0;
+        width: 100%;
+        padding: 20px 14px;
+    }
+
+    .stats,
+    .lower-grid,
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .topbar,
+    .welcome {
+        flex-wrap: wrap;
+    }
+
+    .search {
+        width: 100%;
+    }
+}
+</style>
+</head>
+
+<body>
+<!-- SERVER_MESSAGE -->
+
+<div class="container">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+
+    <div class="logo">
+        <div class="logo-icon">📦</div>
+        <div>
+            <h2>WIMS</h2>
+            <p>WAREHOUSE SYSTEM</p>
+        </div>
+    </div>
+
+    <div class="menu-heading">MAIN MENU</div>
+
+    <a href="#dashboard" class="active">▦ &nbsp; Dashboard</a>
+    <a href="#products">▣ &nbsp; Products</a>
+    <a href="#stock">⇅ &nbsp; Stock Management</a>
+    <a href="#orders">🛒 &nbsp; Orders</a>
+    <a href="#transactions">↔ &nbsp; Transactions</a>
+
+    <div class="menu-heading">ANALYTICS</div>
+
+    <a href="#reports">▤ &nbsp; Reports</a>
+
+    <div class="menu-heading">SYSTEM</div>
+
+    <a href="#about">ⓘ &nbsp; About WIMS</a>
+
+    <div class="sidebar-footer">
+        <b>WIMS PROJECT</b>
+        <br>
+        Phase 3 Submission
+        <br>
+        C++ Inventory System
+    </div>
+
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+    <!-- TOP BAR -->
+    <div class="topbar">
+        <input class="search" type="search"
+        placeholder="⌕  Search products, orders...">
+
+        <div class="profile">
+            <div class="avatar">A</div>
+            <div>
+                <b>Administrator</b>
+                <br>
+                <span style="color:#aa9299">Warehouse Manager</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <section id="dashboard">
+
+        <div class="welcome">
+            <div>
+                <h1>Good Evening! 👋</h1>
+                <p>Here's what's happening in your warehouse today.</p>
+            </div>
+            <div class="date">📅 &nbsp; 22 November 2026</div>
+        </div>
+
+        <!-- STATISTICS -->
+        <div class="stats">
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <span style="color:#9a858a;font-size:13px">Total Products</span>
+                    <div class="stat-icon blue">📦</div>
+                </div>
+                <h2>05</h2>
+                <p><span class="change">Inventory</span> &nbsp; Active products</p>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <span style="color:#9a858a;font-size:13px">Total Stock</span>
+                    <div class="stat-icon green">🏬</div>
+                </div>
+                <h2>380</h2>
+                <p><span class="change">Available</span> &nbsp; Units in warehouse</p>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <span style="color:#9a858a;font-size:13px">Total Orders</span>
+                    <div class="stat-icon purple">🛒</div>
+                </div>
+                <h2>01</h2>
+                <p><span class="change">Active</span> &nbsp; Recorded orders</p>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <span style="color:#9a858a;font-size:13px">Transactions</span>
+                    <div class="stat-icon orange">↔</div>
+                </div>
+                <h2>05</h2>
+                <p><span class="change">History</span> &nbsp; Stock activities</p>
+            </div>
+
+        </div>
+
+        <!-- PRODUCT INVENTORY -->
+        <div class="panel" id="products">
+
+            <div class="panel-header">
+                <div>
+                    <h2>Product Inventory</h2>
+                    <p>Manage and monitor your warehouse products</p>
+                </div>
+                <a href="#add-product" class="btn">+ Add Product</a>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <tr>
+                        <th>Product ID</th>
+                        <th>Product Name</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Expiry Date</th>
+                        <th>Status</th>
+                    </tr>
+
+                    <!-- PRODUCT_ROWS_START -->
+                    <!-- PRODUCT_ROWS_END -->
+                </table>
+            </div>
+        </div>
+
+        <!-- LOWER PANELS -->
+        <div class="lower-grid">
+
+            <div class="panel">
+                <div class="panel-header">
+                    <div>
+                        <h2>Stock Overview</h2>
+                        <p>Product-wise stock distribution</p>
+                    </div>
+                </div>
+
+                <div class="stock-item">
+                    <div class="stock-info">
+                        <b>Rice</b><span>100 Units</span>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-fill" style="width:85%"></div>
+                    </div>
+                </div>
+
+                <div class="stock-item">
+                    <div class="stock-info">
+                        <b>Wheat</b><span>80 Units</span>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-fill purple-fill" style="width:70%"></div>
+                    </div>
+                </div>
+
+                <div class="stock-item">
+                    <div class="stock-info">
+                        <b>Sugar</b><span>60 Units</span>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-fill green-fill" style="width:55%"></div>
+                    </div>
+                </div>
+
+                <div class="stock-item">
+                    <div class="stock-info">
+                        <b>Oil</b><span>50 Units</span>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-fill orange-fill" style="width:45%"></div>
+                    </div>
+                </div>
+
+                <div class="stock-item">
+                    <div class="stock-info">
+                        <b>Salt</b><span>90 Units</span>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-fill" style="width:78%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <div>
+                        <h2>Quick Actions</h2>
+                        <p>Frequently used operations</p>
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <a href="#add-product" class="action">
+                        <span>📦</span>
+                        <b>Add Product</b>
+                    </a>
+
+                    <a href="#stock" class="action">
+                        <span>⇅</span>
+                        <b>Update Stock</b>
+                    </a>
+
+                    <a href="#orders" class="action">
+                        <span>🛒</span>
+                        <b>New Order</b>
+                    </a>
+
+                    <a href="#reports" class="action">
+                        <span>📊</span>
+                        <b>View Reports</b>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ADD PRODUCT -->
+    <div class="panel" id="add-product">
+        <div class="panel-header">
+            <div>
+                <h2>Add New Product</h2>
+                <p>Enter product details below</p>
+            </div>
+        </div>
+
+        <form method="POST" action="/add-product">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Product Name</label>
+                    <input type="text" name="name" placeholder="Enter product name" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Quantity</label>
+                    <input type="number" name="quantity" placeholder="Enter quantity" min="0" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Price (₹)</label>
+                    <input type="number" name="price" placeholder="Enter price" min="0" step="0.01" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Expiry Date</label>
+                    <input type="date" name="expiry">
+                </div>
+            </div>
+
+            <div class="form-submit">
+                <button class="btn" type="submit">Save Product</button>
+                <button class="btn btn-light" type="reset">Clear Form</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- STOCK MANAGEMENT -->
+    <div class="panel" id="stock">
+        <div class="panel-header">
+            <div>
+                <h2>Stock Management</h2>
+                <p>Record incoming and outgoing stock</p>
+            </div>
+        </div>
+
+        <form method="POST" action="/stock">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Product ID</label>
+                    <input type="number" name="product_id" placeholder="Enter product ID" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Transaction Type</label>
+                    <select name="type">
+                        <option>Stock In</option>
+                        <option>Stock Out</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Quantity</label>
+                    <input type="number" name="quantity" placeholder="Enter quantity" min="1" required>
+                </div>
+            </div>
+
+            <div class="form-submit">
+                <button class="btn" type="submit">Update Inventory</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- ORDERS -->
+    <div class="panel" id="orders">
+
+        <div class="panel-header">
+            <div>
+                <h2>Place New Order</h2>
+                <p>Submit a warehouse order</p>
+            </div>
+        </div>
+
+        <form method="POST" action="/order">
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>Product ID</label>
+                    <input type="number" name="product_id"
+                    placeholder="Enter product ID" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Order Quantity</label>
+                    <input type="number" name="quantity"
+                    placeholder="Enter quantity" min="1" required>
+                </div>
+
+            </div>
+
+            <div class="form-submit">
+                <button class="btn" type="submit">
+                    Place Order
+                </button>
+            </div>
+        </form>
+
+    </div>
+
+    <!-- TRANSACTIONS -->
+    <div class="panel" id="transactions">
+
+        <div class="panel-header">
+            <div>
+                <h2>Transaction History</h2>
+                <p>Monitor all inventory activities</p>
+            </div>
+        </div>
+
+        <ul class="report-list">
+            <li>↗ &nbsp; Stock In — Inventory updated</li>
+            <li>↘ &nbsp; Stock Out — Inventory reduced</li>
+            <li>📦 &nbsp; Product Added — New item registered</li>
+            <li>🛒 &nbsp; Order Placed — Order added to queue</li>
+        </ul>
+
+    </div>
+
+    <!-- REPORTS -->
+    <div class="panel" id="reports">
+
+        <div class="panel-header">
+            <div>
+                <h2>Warehouse Reports</h2>
+                <p>Generate and save inventory reports</p>
+            </div>
+        </div>
+
+        <ul class="report-list">
+            <li>📊 &nbsp; Inventory Report — Product and stock details</li>
+            <li>↔ &nbsp; Transaction Report — Stock activity history</li>
+            <li>🛒 &nbsp; Order Report — Pending order details</li>
+        </ul>
+
+        <p style="font-size:12px;color:#9a858a;margin-top:15px">
+            Reports can be generated from the WIMS desktop menu.
+        </p>
+
+    </div>
+
+    <!-- ABOUT -->
+    <div class="panel" id="about">
+
+        <div class="panel-header">
+            <div>
+                <h2>About WIMS</h2>
+                <p>Warehouse Inventory Management System</p>
+            </div>
+        </div>
+
+        <p style="font-size:14px;line-height:1.9;color:#806a70">
+            WIMS is a C++ based Warehouse Inventory Management
+            System designed to manage products, monitor stock,
+            process orders and maintain transaction records.
+            It uses Object-Oriented Programming and Data
+            Structures to organize warehouse operations.
+        </p>
+
+        <br>
+
+        <p style="font-size:13px;line-height:1.9;color:#806a70">
+            <b>Core Concepts:</b> Classes, Encapsulation,
+            Linked Lists, AVL Tree and Queue.
+        </p>
+
+        <p style="font-size:13px;line-height:1.9;color:#806a70">
+            <b>Backend:</b> C++ with a Winsock web server.
+        </p>
+
+    </div>
+
+    <footer class="footer">
+        WIMS — Warehouse Inventory Management System
+        <br>
+        Phase 3 Project | C++ Backend
+        <br>
+        © 2026 All Rights Reserved
+    </footer>
+
+</main>
+</div>
+
+</body>
+</html>
+
